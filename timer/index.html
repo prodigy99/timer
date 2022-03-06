@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+		<title>COI</title>
+		<!-- 开启COOP&COEP 以使用SharedArrayBuffer -->
+		<script src="./coi-serviceworker.js"></script>
+	</head>
+
+	<body>
+		<script>
+			let buffer = new SharedArrayBuffer(16);
+			let counter = new Worker("counter.js"); 
+			counter.postMessage(buffer);
+
+			let arr = new Uint32Array(buffer);
+			let t0 = performance.now();
+
+			setTimeout(function () {
+				let elapsed = performance.now() - t0;
+				document.write("Elapsed Time: " + elapsed + "<br>");
+
+				let count = arr[0];
+				document.write("Counter: " + count + "<br>");
+				let precision = elapsed / count;
+				document.write("Precision: " + precision + " ms<br>");
+			}, 1000);
+		</script>
+	</body>
+</html>
